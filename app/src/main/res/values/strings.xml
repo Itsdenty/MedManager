@@ -3,6 +3,97 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="med_manager_title">Med-Manager</string>
+    <string name="med_content">a complete solution</string>
+    <string name="med_solution">managing medication</string>
+    <string name="med_button">Get Started</string>
     <string name="action_settings">Settings</string>
+    <string name="menu_search">Search</string>
+    <string name="this_month">Medication for this month</string>
+    <string name="menu_add">Add Medication</string>
+    <string name="menu_update">Update Profile</string>
+    <string name="menu_view">View Medications</string>
+    <string name="status_completed">Dosage Completed</string>
+    <string name="status_current">Dosage In progress</string>
+    <string name="status_pending">Dosage not started</string>
+    <string name="drug_name">Paracetamol</string>
+    <string name="add_med">Add Medication</string>
+    <string name="add_phone">Enter Phone Number</string>
+    <string name="add_age">Enter Age</string>
+    <string name="add_location">Enter Location</string>
+    <string name="drug_frequency">2X per day</string>
+    <string name="main_notification_channel_name">Notification Channel for Medication</string>
+    <string name="medication_reminder_notification_title">It is time to take your medication</string>
+    <string name="medication_reminder_notification_body">Do no                                                                                                                                                                                                                                                                  t miss your medication click on check to checkout the medication you are meant to take</string>
+    <string name="drug_time">2nd - 4th March</string>
+    <string name="drug_status">Completed 6/6 dosage</string>
+    <string name="drug_dosage">Two tablets of paracetamol for my headache thrice a day</string>
+    <string name="update_profile">Update profile</string>
+    <string name="start_date_label">Enter start date in dd/mm/yy format</string>
+    <string name="end_date_label">Enter end date in dd/mm/yy format</string>
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string-array name="number_months">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="days">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+    <string-array name="years">
+        <item>2018</item>
+        <item>2019</item>
+    </string-array>
 </resources>
