@@ -148,7 +148,7 @@ public class MedicationGalleryActivity extends AppCompatActivity {
                                        int position, long id) {
                 // On selecting a spinner item
                 String currentYear = adapter.getItemAtPosition(position).toString();
-                if(!monthInitialized){
+                if(!yearInitialized){
                     yearInitialized = true;
                 }
                 else{

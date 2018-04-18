@@ -113,11 +113,10 @@ public class AddMedicationActivity extends AppCompatActivity {
         int otherday = cal.get(cal.DAY_OF_MONTH);
         long difference = 0;
         boolean check = false;
-        if(otherday > today){
+        if(otherday >= today){
             difference = today - otherday;
             check = true;
         }
-
         //check if the medication reminder should start instantly or be delayed
         difference = check ? TimeUnit.DAYS.toSeconds(difference)   : 0;
         int count = check? 1 : 0;
