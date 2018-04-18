@@ -28,7 +28,6 @@ public class MedicationReminderFirebaseJobService extends JobService {
     private AsyncTask mBackgroundTask;
 
 
-    // COMPLETED (4) Override onStartJob
     /**
      * The entry point to your Job. Implementations should offload work to another thread of
      * execution as soon as possible.
@@ -42,26 +41,31 @@ public class MedicationReminderFirebaseJobService extends JobService {
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
 
-        // COMPLETED (5) By default, jobs are executed on the main thread, so make an anonymous class extending
         //  AsyncTask called mBackgroundTask.
         // Here's where we make an AsyncTask so that this is no longer on the main thread
         mBackgroundTask = new AsyncTask() {
 
-            // COMPLETED (6) Override doInBackground
             @Override
             protected Object doInBackground(Object[] params) {
                 final String REMINDER_JOB_TAG = "medication_reminder_tag";
                 // COMPLETED (7) Use ReminderTasks to execute the new charging reminder task you made, use
                 // this service as the context (WaterReminderFirebaseJobService.this) and return null
                 // when finished.
+                //execute the reminder task
                 Context context = MedicationReminderFirebaseJobService.this;
                 ReminderTasks.executeTask(context, ReminderTasks.ACTION_MEDICATION_REMINDER);
-                Log.d("test", jobParameters.getTag());
+
+                //retrieve the extra jobparameter data from bundle
                 Bundle b = jobParameters.getExtras();
                 Log.d("testBundle", String.valueOf(b.getLong("id")));
                 Log.d("testBundle2", String.valueOf(b.getLong("initialDuration")));
                 Log.d("testBundle2", String.valueOf(b.getLong("interval")));
+
+                //initiate a new sharedPreference
+                //get the current data for the new medication from the database
                 Cursor mCursor = UpdateMedRecordUtil.getRecord(context, b.getLong("id"));
+
+                //push the new medication as the current medication inside the sharedpreference
                 SharedPreferencesHelper sph = new SharedPreferencesHelper(context);
                 int id = (int) b.getLong("id");
                 long startDate = 0;
@@ -71,6 +75,8 @@ public class MedicationReminderFirebaseJobService extends JobService {
                 long newId = b.getLong("id");
                 int count = 0;
                 Log.d("moved", String.valueOf(mCursor.moveToPosition(id)));
+
+                //retrieve the returned data from the cursor
                 if (mCursor.moveToFirst()){
                     sph.putInt("currentMedication", id);
                     count = mCursor.getInt(mCursor.getColumnIndex(MedRecordContract.MedRecordEntry.COLUMN_DOSAGE_COUNT));
@@ -81,8 +87,17 @@ public class MedicationReminderFirebaseJobService extends JobService {
                     Log.d("count", String.valueOf(count));
                 }
                 mCursor.close();
+
+                //increment the database count
                 count++;
+
+                //save the updated count
                 UpdateMedRecordUtil.updateRecord(context, newId, count);
+
+                /* use the Calender object to calculate the total number
+                 of dosage and flag the dosage as completed if it is equal
+                 to the current count in the database
+                  */
                 Calendar cl = Calendar.getInstance();
                 cl.setTimeInMillis(startDate);
                 int startD = cl.get(cl.DAY_OF_MONTH);
@@ -92,7 +107,10 @@ public class MedicationReminderFirebaseJobService extends JobService {
                 int noOfDays = endD - startD;
                 int totalDosage = dosageFrequency * noOfDays;
                 if(count == totalDosage){
+                    //flag the medication dosage as completed in the database
                     UpdateMedRecordUtil.updateCompleteRecord(context,newId);
+
+                    //cancel the reminder job
                     Driver driver = new GooglePlayDriver(context);
                     FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
                     dispatcher.cancel(REMINDER_JOB_TAG + String.valueOf(id));
@@ -118,13 +136,10 @@ public class MedicationReminderFirebaseJobService extends JobService {
             }
         };
 
-        // COMPLETED (9) Execute the AsyncTask
         mBackgroundTask.execute();
-        // COMPLETED (10) Return true
         return true;
     }
 
-    // COMPLETED (11) Override onStopJob
     /**
      * Called when the scheduling engine has decided to interrupt the execution of a running job,
      * most likely because the runtime constraints associated with the job are no longer satisfied.
@@ -135,8 +150,6 @@ public class MedicationReminderFirebaseJobService extends JobService {
      */
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        // COMPLETED (12) If mBackgroundTask is valid, cancel it
-        // COMPLETED (13) Return true to signify the job should be retried
         if (mBackgroundTask != null) mBackgroundTask.cancel(true);
         return true;
     }

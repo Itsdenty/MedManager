@@ -21,16 +21,23 @@ import static com.example.dent.medmanager.data.MedRecordContract.MedRecordEntry.
 /**
  * Created by dent4 on 4/11/2018.
  */
-
+// Database query utility for updating medications
 public class UpdateMedRecordUtil {
     static SQLiteDatabase mDb;
     public static Cursor getRecord(Context context, long id){
         // Create a DB helper (this will create the DB if run for the first time)
         MedRecordDbHelper dbHelper = new MedRecordDbHelper(context);
         mDb = dbHelper.getReadableDatabase();
-        Cursor qCursor = mDb.query(TABLE_NAME, new String[] { COLUMN_DOSAGE_COUNT,
-                        COLUMN_DOSAGE_DESCRIPTION, COLUMN_DOSAGE_FREQUENCY,
-                COLUMN_DRUG_NAME, COLUMN_IS_COMPLETE, COLUMN_END_TIME, COLUMN_START_TIME }, _ID + "=?",
+        Cursor qCursor = mDb.query(TABLE_NAME,
+                new String[] {
+                COLUMN_DOSAGE_COUNT,
+                COLUMN_DOSAGE_DESCRIPTION,
+                COLUMN_DOSAGE_FREQUENCY,
+                COLUMN_DRUG_NAME,
+                COLUMN_IS_COMPLETE,
+                COLUMN_END_TIME,
+                COLUMN_START_TIME },
+                _ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         return qCursor;
     }

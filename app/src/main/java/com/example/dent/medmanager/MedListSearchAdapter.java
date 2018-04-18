@@ -18,7 +18,7 @@ import java.util.Calendar;
  * Created by dent4 on 4/4/2018.
  */
 
-public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewHolder> {
+public class MedListSearchAdapter extends RecyclerView.Adapter<MedListSearchAdapter.SearchViewHolder> {
     // Holds on to the cursor to display the waitlist
     private Cursor mCursor;
 
@@ -30,21 +30,21 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewH
      * @param context the calling context/activity
      * @param cursor the db cursor with waitlist data to display
      */
-    public MedListAdapter(Context context, Cursor cursor) {
+    public MedListSearchAdapter(Context context, Cursor cursor) {
         this.mContext = context;
         this.mCursor = cursor;
     }
 
     @Override
-    public MedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Get the RecyclerView item layout
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.medication_list, parent, false);
-        return new MedViewHolder(view);
+        View view = inflater.inflate(R.layout.medication_search_list, parent, false);
+        return new SearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MedViewHolder holder, int position) {
+    public void onBindViewHolder(SearchViewHolder holder, int position) {
         // Move the mCursor to the position of the item to be displayed
         if (!mCursor.moveToPosition(position))
             return; // bail if returned null
@@ -59,8 +59,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewH
         long endDate = mCursor.getLong(mCursor.getColumnIndex(MedRecordContract.MedRecordEntry.COLUMN_END_TIME));
         long id = mCursor.getLong(mCursor.getColumnIndex(MedRecordContract.MedRecordEntry._ID));
 
-
-        //convert date milliseconds to string for view
+        //process cursor data for view
         cl.setTimeInMillis(startDate);
         int startD = cl.get(cl.DAY_OF_MONTH);
         int month = cl.get(cl.MONTH);
@@ -73,7 +72,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewH
         int noOfDays = endD - startD;
         int totalDosage = dosageFrequency * noOfDays;
 
-        //attach cursor data to view
+        //assign cursor data to view
         holder.dosageCountTextView.setText(String.valueOf(dosageFrequency) + "X in a day");
         holder.dosagePeriodTextView.setText(firstDay + " of " + monthString + " - " + secondDay + " of " + monthString);
         holder.dosageStatusTextView.setText("Completed " + String.valueOf(dosageCount + " / " + String.valueOf(totalDosage)));
@@ -103,7 +102,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewH
     /**
      * Inner class to hold the views needed to display a single item in the recycler-view
      */
-    class MedViewHolder extends RecyclerView.ViewHolder {
+    class SearchViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
         TextView dosageCountTextView;
@@ -118,14 +117,15 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedViewH
          * @param itemView The View that you inflated in
          *                 {@link MedListAdapter#onCreateViewHolder(ViewGroup, int)}
          */
-        public MedViewHolder(View itemView) {
+        public SearchViewHolder(View itemView) {
             super(itemView);
-            nameTextView = (TextView) itemView.findViewById(R.id.tv_med_name);
-            dosageStatusTextView = (TextView) itemView.findViewById(R.id.tv_med_status);
-            dosageCountTextView = (TextView) itemView.findViewById(R.id.tv_med_frequency);
-            dosageDescriptionTextView = (TextView) itemView.findViewById(R.id.tv_med_desc);
-            dosagePeriodTextView = (TextView) itemView.findViewById(R.id.tv_med_period);
-            dosageStatusImageView = (ImageView) itemView.findViewById(R.id.iv_med_status);
+            nameTextView = (TextView) itemView.findViewById(R.id.tv_med_search_name);
+            dosageStatusTextView = (TextView) itemView.findViewById(R.id.tv_med_search_status);
+            dosageCountTextView = (TextView) itemView.findViewById(R.id.tv_med_search_frequency);
+            dosageDescriptionTextView = (TextView) itemView.findViewById(R.id.tv_med_search_desc);
+            dosagePeriodTextView = (TextView) itemView.findViewById(R.id.tv_med_search_period);
+            dosageStatusImageView = (ImageView) itemView.findViewById(R.id.iv_med_search_status);
         }
     }
 }
+

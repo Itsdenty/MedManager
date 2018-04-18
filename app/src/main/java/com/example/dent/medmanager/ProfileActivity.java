@@ -32,10 +32,14 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        //setup ActionBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar5);
         toolbar.setTitle(getResources().getString(R.string.med_manager_title));
         setSupportActionBar(toolbar);
         getSupportActionBar (). setDisplayHomeAsUpEnabled (true);
+
+        //intialize the view components for data assignment
         nameTextView = (TextView) findViewById(R.id.tv_username);
         emailTextView = (TextView) findViewById(R.id.tv_email);
         ageTextView = (TextView) findViewById(R.id.tv_age);
@@ -43,6 +47,9 @@ public class ProfileActivity extends AppCompatActivity {
         phoneTextView = (TextView) findViewById(R.id.tv_phone);
         avatarImageView = (ImageView) findViewById(R.id.iv_avatar);
 
+        /* instantiate and pull profile data from the sharedPreference
+         and assign them to the view components
+          */
         sph = new SharedPreferencesHelper(this);
         if(sph.getString(PHONE) != ""){
             String phone = sph.getString(PHONE);
@@ -76,6 +83,8 @@ public class ProfileActivity extends AppCompatActivity {
             Picasso.with(avatarImageView.getContext()).load(Uri.parse(photo)).resize(150, 150)
                     .transform(transformation).into(avatarImageView);
         }
+
+        //activate the navigation drawer
         DrawerUtil.getDrawer(this,toolbar, this);
     }
 }

@@ -13,13 +13,16 @@ import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.dent.medmanager.AddMedicationActivity;
 import com.example.dent.medmanager.MainActivity;
 import com.example.dent.medmanager.MedicationGalleryActivity;
 import com.example.dent.medmanager.ProfileActivity;
 import com.example.dent.medmanager.R;
+import com.example.dent.medmanager.SearchActivity;
 import com.example.dent.medmanager.UpdateProfileActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -39,7 +42,8 @@ import com.viralypatel.sharedpreferenceshelper.lib.SharedPreferencesHelper;
 
 
 public class DrawerUtil {
-    public static void getDrawer(final Activity activity, Toolbar toolbar, Context context) {
+    public static void getDrawer(final Activity activity, Toolbar toolbar, final Context context) {
+        final GoogleSignInClient mGoogleSignInClient;
         final String PHOTO = "person_photo";
         String firstName ="med-manager guest";
         String myEmail ="guest@med-manager.com";
@@ -52,8 +56,8 @@ public class DrawerUtil {
             myEmail = sph.getString("person_email", null);
         final String  img = sph.getString(PHOTO, null);
 //        Log.d("sign_Test", firstName);
-        PrimaryDrawerItem drawerEmptyItem= new PrimaryDrawerItem().withIdentifier(0).withName("");
-        drawerEmptyItem.withEnabled(false);
+//        PrimaryDrawerItem drawerEmptyItem= new PrimaryDrawerItem().withIdentifier(0).withName("");
+//        drawerEmptyItem.withEnabled(false);
 
         PrimaryDrawerItem drawerItemSearch = new PrimaryDrawerItem().withIdentifier(1)
                 .withName(R.string.menu_search).withIcon(R.drawable.ic_menu_search);
@@ -65,11 +69,8 @@ public class DrawerUtil {
                 .withName(R.string.menu_update).withIcon(R.drawable.ic_menu_edit);
         SecondaryDrawerItem drawerItemAddMedication = new SecondaryDrawerItem().withIdentifier(4)
                 .withName(R.string.menu_add).withIcon(R.drawable.ic_menu_add);
-
-//        SecondaryDrawerItem drawerItemHelp = new SecondaryDrawerItem().withIdentifier(5)
-//                .withName(R.string.help).withIcon(R.drawable.ic_help_black_24px);
-//        SecondaryDrawerItem drawerItemDonate = new SecondaryDrawerItem().withIdentifier(6)
-//                .withName(R.string.donate).withIcon(R.drawable.ic_payment_black_24px);
+        SecondaryDrawerItem drawerItemLogout = new SecondaryDrawerItem().withIdentifier(5)
+                .withName(R.string.menu_logout).withIcon(R.drawable.ic_menu_logout);
 
             final Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(Color.BLUE)
@@ -90,17 +91,6 @@ public class DrawerUtil {
                 Picasso.with(imageView.getContext()).cancelRequest(imageView);
             }
 
-    /*
-    @Override
-    public Drawable placeholder(Context ctx) {
-        return super.placeholder(ctx);
-    }
-
-    @Override
-    public Drawable placeholder(Context ctx, String tag) {
-        return super.placeholder(ctx, tag);
-    }
-    */
         });
         AccountHeader headerResult;
         if(firstName.length() > 1){
@@ -153,37 +143,75 @@ public class DrawerUtil {
                 .withCloseOnClick(true)
                 .withSelectedItem(-1)
                 .addDrawerItems(
-                        drawerEmptyItem,drawerEmptyItem,drawerEmptyItem,
                         drawerItemSearch,
                         drawerItemViewMedication,
                         new DividerDrawerItem(),
                         drawerItemUpdateProfile,
-                        drawerItemAddMedication
-//                        drawerItemHelp,
-//                        drawerItemDonate
+                        drawerItemAddMedication,
+                        drawerItemLogout
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        SharedPreferencesHelper sp = new SharedPreferencesHelper(context);
+                        String name = sp.getString("person_name");
                         if (drawerItem.getIdentifier() == 2 && !(activity instanceof MainActivity)) {
+                            if(name.length() > 0){
                             // load MedicationGallery screen
                             Intent intent = new Intent(activity, MedicationGalleryActivity.class);
                             view.getContext().startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(context,
+                                        "Please Login to access this screen", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else if (drawerItem.getIdentifier() == 4 && !(activity instanceof MainActivity)) {
+                            if(name.length() > 0){
                             // load add medication screen
                             Intent intent = new Intent(activity, AddMedicationActivity.class);
                             view.getContext().startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(context,
+                                        "Please Login to access this screen", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else if (drawerItem.getIdentifier() == 3 && !(activity instanceof MainActivity)) {
+                            if(name.length() > 1){
                             // load Update profile screen
                             Intent intent = new Intent(activity, UpdateProfileActivity.class);
+                            view.getContext().startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(context,
+                                        "Please Login to access this screen", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else if (drawerItem.getIdentifier() == 1 && !(activity instanceof MainActivity)) {
+                            if(name.length() > 1){
+                            // load Update Search screen
+                            Intent intent = new Intent(activity, SearchActivity.class);
+                            view.getContext().startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(context,
+                                        "Please Login to access this screen", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else if (drawerItem.getIdentifier() == 5 && !(activity instanceof MainActivity)) {
+                            // load Update Main screen
+                            Toast.makeText(context,
+                                    "Logout attempted", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            intent.putExtra("logout","Logout user");
                             view.getContext().startActivity(intent);
                         }
                         return true;
                     }
                 })
                 .build();
-        result.getActionBarDrawerToggle (). setDrawerIndicatorEnabled (false);
+        result.getActionBarDrawerToggle (). setDrawerIndicatorEnabled (true);
     }
 }

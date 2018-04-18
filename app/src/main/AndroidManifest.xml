@@ -33,7 +33,8 @@
 
         <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SingleMedicationActivity"></activity>
+        <activity android:name=".SingleMedicationActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

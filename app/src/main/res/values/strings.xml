@@ -10,8 +10,12 @@
     <string name="action_settings">Settings</string>
     <string name="menu_search">Search</string>
     <string name="this_month">Medication for this month</string>
+    <string name="search_med">Search your medication</string>
+    <string name="med_search">Enter search text</string>
+    <string name="search_now">Search</string>
     <string name="menu_add">Add Medication</string>
     <string name="menu_update">Update Profile</string>
+    <string name="menu_logout">Logout</string>
     <string name="menu_view">View Medications</string>
     <string name="status_completed">Dosage Completed</string>
     <string name="status_current">Dosage In progress</string>

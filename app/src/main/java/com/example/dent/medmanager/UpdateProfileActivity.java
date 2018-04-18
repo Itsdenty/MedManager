@@ -23,13 +23,21 @@ public class UpdateProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
+
+        //setup ActionBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar4);
         toolbar.setTitle(getResources().getString(R.string.med_manager_title));
         setSupportActionBar(toolbar);
         getSupportActionBar (). setDisplayHomeAsUpEnabled (true);
+
+        //initialize EditText views
         phoneNumberEditView = (EditText) findViewById(R.id.et_phone);
         ageEditView = (EditText) findViewById(R.id.et_age);
         locationEditView = (EditText) findViewById(R.id.et_location);
+
+        /* initialize sharedPreference, check if it has data
+        and use the data to pre populate the edittext fields
+         */
         sph = new SharedPreferencesHelper(this);
         if(sph.getString(PHONE) != ""){
             String phone = sph.getString(PHONE);
@@ -46,9 +54,12 @@ public class UpdateProfileActivity extends AppCompatActivity {
         DrawerUtil.getDrawer(this,toolbar, this);
     }
     public void onSubmit(View view){
+        //retrieve the valued entered in the edittext views
         String phoneNumber = phoneNumberEditView.getText().toString();
         String location = locationEditView.getText().toString();
         int age = Integer.parseInt(ageEditView.getText().toString());
+
+        //store the data inside the sharedPreference
         sph.putString(PHONE, phoneNumber);
         sph.putString(LOCATION, location);
         sph.putInt(AGE, age);

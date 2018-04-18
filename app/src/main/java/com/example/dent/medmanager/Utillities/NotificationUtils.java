@@ -29,16 +29,16 @@ public class NotificationUtils {
      * can be handy when we need to cancel the notification, or perhaps update it. This number is
      * arbitrary and can be set to whatever you like. 1138 is in no way significant.
      */
-    private static final int WATER_REMINDER_NOTIFICATION_ID = 1138;
+    private static final int MEDICATION_REMINDER_NOTIFICATION_ID = 1138;
     /**
      * This pending intent id is used to uniquely reference the pending intent
      */
-    private static final int WATER_REMINDER_PENDING_INTENT_ID = 3417;
+    private static final int MEDICATION_REMINDER_PENDING_INTENT_ID = 3417;
     /**
      * This notification channel id is used to link notifications to this channel
      */
-    private static final String WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
-    private static final int ACTION_DRINK_PENDING_INTENT_ID = 1;
+    private static final String MEDICATION_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
+    private static final int ACTION_MEDICATION_PENDING_INTENT_ID = 1;
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
 
     public static void clearAllNotifications(Context context) {
@@ -47,16 +47,17 @@ public class NotificationUtils {
         notificationManager.cancelAll();
     }
 
-    public static void remindUserBecauseCharging(Context context) {
+    public static void remindUserBecauseMedication(Context context) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(
-                    WATER_REMINDER_NOTIFICATION_CHANNEL_ID,
+                    MEDICATION_REMINDER_NOTIFICATION_CHANNEL_ID,
                     context.getString(R.string.main_notification_channel_name),
                     NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(mChannel);
         }
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_basket)
@@ -67,7 +68,7 @@ public class NotificationUtils {
                         context.getString(R.string.medication_reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
-                .addAction(drinkWaterAction(context))
+                .addAction(checkMedicationAction(context))
                 .addAction(ignoreReminderAction(context))
                 .setAutoCancel(true);
 
@@ -75,8 +76,9 @@ public class NotificationUtils {
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
-        notificationManager.notify(WATER_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
+        notificationManager.notify(MEDICATION_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
     }
+
     private static NotificationCompat.Action ignoreReminderAction(Context context) {
         Intent ignoreReminderIntent = new Intent(context, MedicationReminderIntentService.class);
         ignoreReminderIntent.setAction(ReminderTasks.ACTION_DISMISS_NOTIFICATION);
@@ -91,12 +93,12 @@ public class NotificationUtils {
         return ignoreReminderAction;
     }
 
-    private static NotificationCompat.Action drinkWaterAction(Context context) {
+    private static NotificationCompat.Action checkMedicationAction(Context context) {
         Intent incrementWaterCountIntent = new Intent(context, MedicationReminderIntentService.class);
         incrementWaterCountIntent.setAction(ReminderTasks.ACTION_CHECK_MEDICATION_COUNT);
         PendingIntent incrementWaterPendingIntent = PendingIntent.getService(
                 context,
-                ACTION_DRINK_PENDING_INTENT_ID,
+                ACTION_MEDICATION_PENDING_INTENT_ID,
                 incrementWaterCountIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationCompat.Action useMedicationAction = new NotificationCompat.Action(R.drawable.ic_tb,
@@ -110,7 +112,7 @@ public class NotificationUtils {
 
         return PendingIntent.getActivity(
                 context,
-                WATER_REMINDER_PENDING_INTENT_ID,
+                MEDICATION_REMINDER_PENDING_INTENT_ID,
                 startActivityIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
